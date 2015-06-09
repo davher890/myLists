@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">myLists</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="listName">List Name</string>
+    <string name="listPwd">List Password</string>
+    <string name="joinList">Join List</string>
+    <string name="newList">New List</string>
+    <string name="createList">Create List</string>
+
+</resources>
