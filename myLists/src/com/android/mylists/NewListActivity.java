@@ -52,7 +52,8 @@ public class NewListActivity extends ActionBarActivity implements
 			paramMap.put("name", etNewListName.getText().toString());
 			paramMap.put("password", etNewListPwd.getText().toString());
 
-			GetWSData get = new GetWSData("addList.php/", this, paramMap);
+			GetWSData get = new GetWSData("myLists/addList.php/", this,
+					paramMap);
 			get.execute();
 		}
 	}

@@ -1,6 +1,11 @@
 package com.android.mylists;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +28,9 @@ public class IndexActivity extends ActionBarActivity implements OnClickListener 
 
 		etListName = (EditText) findViewById(R.id.etListName);
 		etListPwd = (EditText) findViewById(R.id.etListPwd);
+
+		findViewById(R.id.btNew).setOnClickListener(this);
+		findViewById(R.id.btJoin).setOnClickListener(this);
 	}
 
 	@Override
@@ -55,12 +63,35 @@ public class IndexActivity extends ActionBarActivity implements OnClickListener 
 			paramMap.put("name", etListName.getText().toString());
 			paramMap.put("password", etListPwd.getText().toString());
 
-			GetWSData get = new GetWSData("joinList.php/", this, paramMap);
+			GetWSData get = new GetWSData("myLists/getItemList.php/", this,
+					paramMap);
 			get.execute();
 		}
 	}
 
 	public void manageDataWs(String result) {
 
+		result = result.substring(result.indexOf('['));
+
+		JSONArray arrayItems = null;
+		ArrayList<String> listItem = new ArrayList<String>();
+		try {
+			arrayItems = new JSONArray(result);
+
+			int list_id = ((JSONObject) arrayItems.getJSONObject(0))
+					.getInt("id");
+
+			for (int i = 1; i < arrayItems.length(); i++) {
+				JSONObject obj = arrayItems.getJSONObject(i);
+				listItem.add(obj.getString("content"));
+			}
+
+			Intent i = new Intent(this, ListItemActivity.class);
+			i.putExtra("list_id", list_id);
+			i.putStringArrayListExtra("listItem", listItem);
+			startActivity(i);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 }

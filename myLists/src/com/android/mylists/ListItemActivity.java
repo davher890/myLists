@@ -11,14 +11,26 @@ import android.widget.ListView;
 public class ListItemActivity extends ActionBarActivity {
 
 	ListView itemListView;
+	ArrayList<String> listItem;
+	int list_id;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list_item);
 
+		Bundle b = getIntent().getExtras();
+
+		if (b != null) {
+			this.listItem = (ArrayList<String>) b
+					.getStringArrayList("listItem");
+		}
+		list_id = b.getInt("id");
+
 		itemListView = (ListView) findViewById(R.id.listViewItem);
 
+		ListItemAdapter adapter = new ListItemAdapter(this, listItem);
+		itemListView.setAdapter(adapter);
 	}
 
 	@Override
@@ -42,9 +54,5 @@ public class ListItemActivity extends ActionBarActivity {
 
 	public void manageDataWs(String result) {
 
-		ArrayList<String> itemsList = new ArrayList<String>();
-
-		ListItemAdapter adapter = new ListItemAdapter(this, itemsList);
-		itemListView.setAdapter(adapter);
 	}
 }

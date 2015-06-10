@@ -42,8 +42,9 @@ public class GetWSData extends AsyncTask<String, Context, String> {
 			if (mapParams != null) {
 				StringBuffer urlParams = new StringBuffer(url);
 				for (String name : mapParams.keySet()) {
-					urlParams.append(name).append("=")
-							.append(mapParams.get(name)).append("&");
+					urlParams.append(name).append("=").append('\'')
+							.append(mapParams.get(name)).append('\'')
+							.append("&");
 				}
 				url = urlParams.toString();
 			}
