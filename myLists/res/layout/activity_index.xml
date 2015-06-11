@@ -16,13 +16,17 @@
         android:layout_height="wrap_content"
         android:text="@string/listName"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    <requestFocus />
 
     <EditText
         android:id="@+id/etListName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="text" />
+        android:inputType="text">
+        <requestFocus />
+	</EditText>
 
     <TextView
         android:id="@+id/textView2"

@@ -1,6 +1,5 @@
 package com.android.mylists;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.json.JSONArray;
@@ -74,7 +73,7 @@ public class IndexActivity extends ActionBarActivity implements OnClickListener 
 		result = result.substring(result.indexOf('['));
 
 		JSONArray arrayItems = null;
-		ArrayList<String> listItem = new ArrayList<String>();
+		HashMap<Integer, String> mapItems = new HashMap<>();
 		try {
 			arrayItems = new JSONArray(result);
 
@@ -83,12 +82,12 @@ public class IndexActivity extends ActionBarActivity implements OnClickListener 
 
 			for (int i = 1; i < arrayItems.length(); i++) {
 				JSONObject obj = arrayItems.getJSONObject(i);
-				listItem.add(obj.getString("content"));
+				mapItems.put(obj.getInt("item_id"), obj.getString("content"));
 			}
 
 			Intent i = new Intent(this, ListItemActivity.class);
 			i.putExtra("list_id", list_id);
-			i.putStringArrayListExtra("listItem", listItem);
+			i.putExtra("map_items", mapItems);
 			startActivity(i);
 		} catch (JSONException e) {
 			e.printStackTrace();

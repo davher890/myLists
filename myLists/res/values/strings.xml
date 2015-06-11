@@ -9,5 +9,7 @@
     <string name="joinList">Join List</string>
     <string name="newList">New List</string>
     <string name="createList">Create List</string>
+    
+    <string name="action_add">Add</string><string name="action_save">Save</string>
 
 </resources>
