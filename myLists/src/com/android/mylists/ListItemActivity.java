@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -15,13 +17,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
-public class ListItemActivity extends ActionBarActivity implements
-		OnLongClickListener {
+public class ListItemActivity extends ActionBarActivity {
 
 	ListView itemListView;
 	HashMap<Integer, String> mapItems;
@@ -41,7 +44,7 @@ public class ListItemActivity extends ActionBarActivity implements
 			mapItems = (HashMap<Integer, String>) b
 					.getSerializableExtra("map_items");
 		}
-		list_id = b.getIntExtra("id", -1);
+		list_id = b.getIntExtra("list_id", -1);
 
 		itemListView = (ListView) findViewById(R.id.listViewItem);
 
@@ -49,6 +52,25 @@ public class ListItemActivity extends ActionBarActivity implements
 		itemListView.setAdapter(adapter);
 
 		newAdded = new ArrayList<String>();
+		delItem = new ArrayList<Integer>();
+
+		itemListView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+
+				long itemId = adapter.getItemId(position);
+				if (view.isSelected()) {
+					delItem.add((int) itemId);
+					view.setSelected(false);
+				} else {
+					delItem.add((int) itemId);
+					view.setSelected(true);
+				}
+				return false;
+			}
+		});
 	}
 
 	@Override
@@ -67,7 +89,7 @@ public class ListItemActivity extends ActionBarActivity implements
 		if (id == R.id.action_add) {
 			final Dialog dialog = new Dialog(this);
 			dialog.setContentView(R.layout.add_item_dialog);
-			dialog.setTitle("Set the content for the new item");
+			dialog.setTitle("New list item");
 
 			Button dialogButton = (Button) dialog.findViewById(R.id.btOkDialog);
 			// if button is clicked, close the custom dialog
@@ -90,27 +112,45 @@ public class ListItemActivity extends ActionBarActivity implements
 
 			List<NameValuePair> nvp = new ArrayList<NameValuePair>();
 			nvp.add(new BasicNameValuePair("list_id", String.valueOf(list_id)));
-
-			for (String value : newAdded) {
-				nvp.add(new BasicNameValuePair("items[]", value));
+			if (newAdded != null && newAdded.size() > 0) {
+				for (String value : newAdded) {
+					nvp.add(new BasicNameValuePair("items_add[]", value));
+				}
 			}
-			PostWSData postWSData = new PostWSData("myLists/getItemList.php/",
-					this, nvp);
-			postWSData.execute();
-
+			if (delItem != null && delItem.size() > 0) {
+				for (long value : delItem) {
+					nvp.add(new BasicNameValuePair("items_del[]", String
+							.valueOf(value)));
+				}
+			}
+			if (nvp.size() > 1) {
+				PostWSData postWSData = new PostWSData(
+						"myLists/saveItemList.php/", ListItemActivity.this, nvp);
+				postWSData.execute();
+			}
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	public void manageDataWs(String result) {
 
-		System.out.println(result);
+		JSONObject obj;
+		try {
+			obj = new JSONObject(result);
+			obj.getString("error");
+			Toast.makeText(this, "Some error happened!", Toast.LENGTH_SHORT)
+					.show();
+		} catch (JSONException e) {
+			Toast.makeText(this, "Save completed!", Toast.LENGTH_SHORT).show();
+			if (result.equals("null")) {
+				for (int i = 0; i < delItem.size(); i++) {
+					mapItems.remove(delItem.get(i));
+				}
+				delItem.clear();
+				newAdded.clear();
+				adapter.notifyDataSetChanged();
+			}
+		}
 
-	}
-
-	@Override
-	public boolean onLongClick(View v) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 }

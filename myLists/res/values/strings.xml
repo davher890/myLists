@@ -11,5 +11,6 @@
     <string name="createList">Create List</string>
     
     <string name="action_add">Add</string><string name="action_save">Save</string>
+    <string name="ok">Ok</string>
 
 </resources>

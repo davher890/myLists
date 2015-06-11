@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class ListItemAdapter extends BaseAdapter {
+public class ListItemAdapter extends BaseAdapter{
 
 	private Integer[] itemIds = null;
 	private HashMap<Integer, String> mapItems;
@@ -50,5 +50,4 @@ public class ListItemAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return itemIds[position];
 	}
-
 }
