@@ -134,6 +134,8 @@ public class ListItemActivity extends ActionBarActivity {
 
 	public void manageDataWs(String result) {
 
+		result = result.substring(result.indexOf('['));
+
 		JSONObject obj;
 		try {
 			obj = new JSONObject(result);

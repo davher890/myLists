@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class IndexActivity extends ActionBarActivity implements OnClickListener {
 
@@ -77,18 +78,24 @@ public class IndexActivity extends ActionBarActivity implements OnClickListener 
 		try {
 			arrayItems = new JSONArray(result);
 
-			int list_id = ((JSONObject) arrayItems.getJSONObject(0))
-					.getInt("id");
+			if (!arrayItems.isNull(0)) {
+				int list_id = ((JSONObject) arrayItems.getJSONObject(0))
+						.getInt("id");
 
-			for (int i = 1; i < arrayItems.length(); i++) {
-				JSONObject obj = arrayItems.getJSONObject(i);
-				mapItems.put(obj.getInt("item_id"), obj.getString("content"));
+				for (int i = 1; i < arrayItems.length(); i++) {
+					JSONObject obj = arrayItems.getJSONObject(i);
+					mapItems.put(obj.getInt("item_id"),
+							obj.getString("content"));
+				}
+
+				Intent i = new Intent(this, ListItemActivity.class);
+				i.putExtra("list_id", list_id);
+				i.putExtra("map_items", mapItems);
+				startActivity(i);
+			} else {
+				Toast.makeText(this, "The list does not exist",
+						Toast.LENGTH_SHORT).show();
 			}
-
-			Intent i = new Intent(this, ListItemActivity.class);
-			i.putExtra("list_id", list_id);
-			i.putExtra("map_items", mapItems);
-			startActivity(i);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

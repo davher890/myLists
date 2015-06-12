@@ -11,7 +11,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_perm_group_user_dictionary_write"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
